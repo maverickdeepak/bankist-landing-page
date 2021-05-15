@@ -67,6 +67,35 @@ document.querySelectorAll('.nav__link').forEach(function(el) {
   });
 });
 
+// Tabbed Box
+
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+tabsContainer.addEventListener('click', (el) => {
+  const clicked = el.target.closest('.operations__tab');
+
+  // Guard Claouse
+  if(!clicked) return;
+
+  // Activate tab
+  tabs.forEach((t) => {
+    t.classList.remove('operations__tab--active');
+  })
+
+  tabsContent.forEach((t) => {
+    t.classList.remove('operations__content--active');
+  })
+  
+  clicked.classList.toggle('operations__tab--active');
+
+  // Activate tab content area
+
+  document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active');
+
+})
+
 ////////////////////////////////////
 
 // Selecting Elements
@@ -151,9 +180,17 @@ document.querySelectorAll('.nav__link').forEach(function(el) {
 
 const h1 = document.querySelector('h1');
 
-console.log(h1.querySelectorAll('.highlight'));
+// console.log(h1.querySelectorAll('.highlight'));
 
-console.log(h1.childNodes);
-console.log(h1.children);
+// console.log(h1.childNodes);
+// console.log(h1.children);
 
-console.log(h1.firstElementChild.style.color = 'red');
+// console.log(h1.firstElementChild.style.color = 'red');
+
+// console.log(h1.parentElement.children);
+
+// [...h1.parentElement.children].forEach((el) => {
+//   if (el !== h1) {
+//     el.style.transform = 'scale(1.5)';
+//   }
+// })
