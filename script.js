@@ -7,6 +7,11 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const nav = document.querySelector('.nav');
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+const section = document.querySelectorAll('.section');
 
 ///////////////////////////////////////
 // Modal window
@@ -69,10 +74,6 @@ document.querySelectorAll('.nav__link').forEach(function(el) {
 
 // Tabbed Box
 
-const tabs = document.querySelectorAll('.operations__tab');
-const tabsContainer = document.querySelector('.operations__tab-container');
-const tabsContent = document.querySelectorAll('.operations__content');
-
 tabsContainer.addEventListener('click', (el) => {
   const clicked = el.target.closest('.operations__tab');
 
@@ -95,6 +96,105 @@ tabsContainer.addEventListener('click', (el) => {
   document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active');
 
 })
+
+// Menu Fade Animation
+
+const handleHover = (e, opacity) => {
+    if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+
+    siblings.forEach((el) => {
+      if (el !== link) {
+        el.style.opacity = opacity;
+      }
+    });
+
+    logo.style.opacity = opacity;
+  }
+}
+
+nav.addEventListener('mouseover', (e) => {
+  handleHover(e, 0.5)
+});
+
+nav.addEventListener('mouseout', (e) => {
+  handleHover(e, 1)
+});
+
+//Sticky Navigation
+const initialCoords = section1.getBoundingClientRect();
+console.log(initialCoords);
+
+window.addEventListener('scroll', () => {
+  // console.log(window.scrollY);
+
+  if (window.scrollY > initialCoords.top) {
+    nav.classList.add('sticky')
+  } else {
+    nav.classList.remove('sticky')
+  }
+})
+
+
+// Reveal Sections
+
+const allSections = document.querySelectorAll('.section');
+
+const revealSection = function(entries, observer) {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) {
+    return;
+  } else {
+    entry.target.classList.remove('section--hidden');
+    observer.unobserve(entry.target);
+  }
+
+}
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSections.forEach((section) => {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden')
+})
+
+
+// Lazy loading images
+
+const imgTargets = document.querySelectorAll('img[data-src]');
+
+const loadImg = function(entries, observer){
+  const [entry] = entries;
+
+  if(!entry.isIntersecting) return;
+
+  // Replace SRC attribute
+  entry.target.src = entry.target.dataset.src;
+
+  entry.target.addEventListener('load', () => {
+    entry.target.classList.remove('lazy-img');
+  });
+
+  observer.unobserve(entry.target);
+}
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+  rootMargin: '-200px'
+});
+
+imgTargets.forEach((img) => {
+
+  imgObserver.observe(img)
+
+});
 
 ////////////////////////////////////
 
