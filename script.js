@@ -161,7 +161,7 @@ const sectionObserver = new IntersectionObserver(revealSection, {
 
 allSections.forEach((section) => {
   sectionObserver.observe(section);
-  section.classList.add('section--hidden')
+  //section.classList.add('section--hidden')
 })
 
 
@@ -195,6 +195,123 @@ imgTargets.forEach((img) => {
   imgObserver.observe(img)
 
 });
+
+// Testimonial Slider
+
+const slides = document.querySelectorAll('.slide');
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+const dotContainer = document.querySelector('.dots');
+
+let currentSlide = 0;
+const maxSlide = slides.length;
+
+
+const createDots = function () {
+  slides.forEach((_, i) => {
+    dotContainer.insertAdjacentHTML('beforeend', `<button class="dots__dot" data-slide="${i}"></button>`)
+  })
+}
+
+createDots();
+
+const activateDot = function(slide) {
+  document.querySelectorAll('.dots__dot').forEach((dot) => {
+    dot.classList.remove('dots__dot--active');
+  });
+
+  document.querySelector(`.dots__dot[data-slide="${slide}"]`).classList.add('dots__dot--active');
+}
+
+
+// Create a function for Go To particular Slide (for dots)
+
+const goToSlide = function (slide) {
+  slides.forEach((s, i) => {
+    s.style.transform = `translateX(${100 * (i - slide)}%)`
+  });
+}
+goToSlide(0);
+
+const slider = document.querySelector('.slider');
+// slider.style.transform = 'scale(0.5)';
+// slider.style.overflow = 'visible';  
+
+slides.forEach((s, i) => {
+  s.style.transform = `translateX(${100 * i}%)`
+});
+
+
+// Next Slide
+
+btnRight.addEventListener('click', () => {
+
+
+  if (currentSlide === maxSlide - 1) {
+    currentSlide = 0
+  } else {
+    currentSlide++;
+  }
+  
+
+  goToSlide(currentSlide);
+
+  activateDot(currentSlide);
+
+});
+
+// Prev Slide
+
+btnLeft.addEventListener('click', () => {
+  if (currentSlide === 0) {
+    currentSlide = maxSlide - 1;
+  } else {
+    currentSlide--;
+  }
+
+  goToSlide(currentSlide);
+
+  activateDot(currentSlide);
+
+});
+
+// On Lef Key and Right Key, Move Slides
+
+// document.addEventListener('keydown', function(e) {
+//   if (e.key === 'ArrowLeft') {
+//     if (currentSlide === 0) {
+//         currentSlide = maxSlide - 1;
+//       } else {
+//         currentSlide--;
+//       }
+
+//     slides.forEach((s, i) => {
+//       s.style.transform = `translateX(${100 * (i - currentSlide)}%)`
+//     });
+//   };
+
+//   if (e.key === 'ArrowRight') {
+//     if (currentSlide === maxSlide - 1) {
+//       currentSlide = 0
+//       } else {
+//         currentSlide++;
+//       }
+      
+//       slides.forEach((s, i) => {
+//         s.style.transform = `translateX(${100 * (i - currentSlide)}%)`
+//       });
+//   }
+// });
+
+// Move slide onClick Dots
+
+dotContainer.addEventListener('click', function(e) {
+  if (e.target.classList.contains('dots__dot')) {
+    const {slide} = e.target.dataset;
+    goToSlide(slide);
+    activateDot(slide);
+  }
+})
 
 ////////////////////////////////////
 
